@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = {"/trang-chu"})
+@WebServlet(urlPatterns = {"/admin-home"})
 public class HomeController extends HttpServlet{
 
 	/**
@@ -19,8 +19,17 @@ public class HomeController extends HttpServlet{
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher rd = request.getRequestDispatcher("/views/home.jsp");
-		rd.forward(request, response);
+		String action = request.getParameter("action");
+		if(action != null && action.equals("LIST")) {
+			RequestDispatcher rd = request.getRequestDispatcher("/views/admin/building/list.jsp");
+			rd.forward(request, response);
+		}else if(action != null && action.equals("EDIT")) {
+			RequestDispatcher rd = request.getRequestDispatcher("/views/admin/building/edit.jsp");
+			rd.forward(request, response);
+		}else {
+			RequestDispatcher rd = request.getRequestDispatcher("/views/admin/building/list.jsp");
+			rd.forward(request, response);
+		}	
 		
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
