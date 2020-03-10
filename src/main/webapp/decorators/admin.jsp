@@ -57,5 +57,6 @@
 	<script src="<c:url value='/template/admin/assets/js/ace.min.js' />"></script>
 	
 	<script src="<c:url value='/template/admin/js/building-list.js' />"></script>
+	<script src="<c:url value='/template/admin/js/building-edit.js' />"></script>
 </body>
 </html>

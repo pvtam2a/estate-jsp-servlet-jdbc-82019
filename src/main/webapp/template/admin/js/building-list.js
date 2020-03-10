@@ -60,3 +60,7 @@ function deleteBuilding(data){
 		}
 	});
 }
+$('#btnSearchBuilding').click(function (e) { 
+	e.preventDefault();
+	$('#formSearchBuilding').submit();
+});

@@ -21,45 +21,45 @@ import com.laptrinhjavaweb.utils.HttpUtil;
 
 @WebServlet(urlPatterns = { "/api-building" })
 public class BuildingAPI extends HttpServlet {
-	private static final long serialVersionUID = 1L;	
-	
+	private static final long serialVersionUID = 1L;
+
 	private IBuildingService buildingService = new BuildingService();
+
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-			
+	protected void doGet(HttpServletRequest request, HttpServletResponse
+		response) throws ServletException, IOException {
+
 		ObjectMapper mapper = new ObjectMapper();
 		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
-		BuildingDTO building = FormUtil.toModel(BuildingDTO.class, request);		
+		response.setContentType("application/json"); 
+		BuildingDTO building =	FormUtil.toModel(BuildingDTO.class, request); 
 		BuildingSearchBuilder buildingSearchBuilder = new BuildingSearchBuilder.Builder()
-				.setName(building.getName())
-				.setDistrict(building.getDistrict())
-				.setBuildingArea(building.getBuildingArea())
-				.setNumberOfBasement(building.getNumberOfBasement())
-				.setStreet(building.getStreet())
-				.setWard(building.getWard())
-				.setBuildingTypes(building.getBuildingTypes())
-				.setRentAreaFrom(building.getRentAreaFrom())
-				.setRentAreaTo(building.getRentAreaTo())
-				.setCostRentFrom(building.getCostRentFrom())
-				.setCostRentTo(building.getCostRentTo())
-				.setStaffId(building.getStaffId())
-				.build();
+			.setName(building.getName()) .setDistrict(building.getDistrict())
+			.setBuildingArea(building.getBuildingArea())
+			.setNumberOfBasement(building.getNumberOfBasement())
+			.setStreet(building.getStreet()) .setWard(building.getWard())
+			.setBuildingTypes(building.getBuildingTypes())
+			.setRentAreaFrom(building.getRentAreaFrom())
+			.setRentAreaTo(building.getRentAreaTo())
+			.setCostRentFrom(building.getCostRentFrom())
+			.setCostRentTo(building.getCostRentTo()) .setStaffId(building.getStaffId())
+			.build();
 
 		Pageable pageable = new PageRequest(building.getPage(), building.getLimit());
-		List<BuildingDTO> buildings = buildingService.findAll(buildingSearchBuilder, pageable);
+		List<BuildingDTO> buildings = buildingService.findAll(buildingSearchBuilder,
+		pageable);
 
 		mapper.writeValue(response.getOutputStream(), buildings);
 	}
+	 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
-		BuildingDTO buildingDTO =  HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
-		buildingDTO = buildingService.save(buildingDTO);
+		BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
+		// buildingDTO = buildingService.save(buildingDTO);
 		mapper.writeValue(response.getOutputStream(), buildingDTO);
 	}
 
@@ -68,7 +68,7 @@ public class BuildingAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
-		BuildingDTO buildingDTO =  HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
+		BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
 		buildingDTO = buildingService.update(buildingDTO);
 		mapper.writeValue(response.getOutputStream(), buildingDTO);
 	}
@@ -78,7 +78,7 @@ public class BuildingAPI extends HttpServlet {
 		ObjectMapper mapper = new ObjectMapper();
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json");
-		BuildingDTO buildingDTO =  HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
+		BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
 		buildingService.delete(buildingDTO.getIds());
 		mapper.writeValue(response.getOutputStream(), "{}");
 	}

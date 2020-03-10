@@ -40,7 +40,7 @@
 								<label class="col-sm-2 control-label no-padding-right" for="numberofbasement"> Số tầng hầm </label>
 
 								<div class="col-sm-10">
-									<input type="number" id="numberofbasement" name="numberofbasement" placeholder="numberofbasement" class="form-control" />
+									<input type="number" id="numberOfBasement" name="numberOfBasement" placeholder="numberofbasement" class="form-control" />
 								</div>
 							</div>
 							<div class="form-group">

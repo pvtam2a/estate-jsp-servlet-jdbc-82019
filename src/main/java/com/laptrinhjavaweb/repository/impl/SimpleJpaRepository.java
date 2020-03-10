@@ -47,8 +47,9 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 		if(where != null && where.length == 1) {
 			sql.append(where[0]);
 		}
-		sql.append(" LIMIT " + pageable.getOffset() + ", " + pageable.getLimit() + " ");
-		
+		if(pageable.getLimit() != null && pageable.getOffset() != null) {
+			sql.append(" LIMIT " + pageable.getOffset() + ", " + pageable.getLimit() + " ");
+		}
 		ResultSetMapper<T> resultSetMapper = new ResultSetMapper<>();
 		List<T> results = new ArrayList<>();
 		Connection connection = null;
@@ -153,9 +154,9 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 	public List<T> findAll(String sqlSearch, Pageable pageable, Object... where) {		
 		//SQL
 		StringBuilder sql = new StringBuilder(sqlSearch);
-	
-		sql.append(" LIMIT " + pageable.getOffset() + ", " + pageable.getLimit() + " ");
-		
+		if(pageable.getLimit() != null && pageable.getOffset() != null) {
+			sql.append(" LIMIT " + pageable.getOffset() + ", " + pageable.getLimit() + " ");
+		}
 		ResultSetMapper<T> resultSetMapper = new ResultSetMapper<>();
 		List<T> results = new ArrayList<>();
 		Connection connection = null;
