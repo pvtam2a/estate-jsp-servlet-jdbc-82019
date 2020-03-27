@@ -45,11 +45,26 @@ public class BuildingController extends HttpServlet{
 
 			Pageable pageable = new PageRequest(building.getPage(), building.getLimit());
 			List<BuildingDTO> buildings = buildingService.findAll(buildingSearchBuilder, pageable);
-			request.setAttribute("buildings", buildings);
+						
+			request.setAttribute("buildings", buildings);			
 			url = "/views/admin/building/list.jsp";			
 		}else if(action != null && action.equals("EDIT")) {
+			if(building.getId() != null) {
+				//findbyId
+				//cac ban tu lam anh sua
+				building = new BuildingDTO();
+				building.setName("CMC Tower");
+				String[] type = {"TANG_TRET", "NGUYEN_CAN"};
+				building.setBuildingTypes(type);
+				building.setNumberOfBasement("3");
+				building.setRentArea("100,200");
+			}
 			url = "/views/admin/building/edit.jsp";			
 		}
+		
+		request.setAttribute("districts", buildingService.getDistricts());
+		request.setAttribute("buildingTypes", buildingService.getBuildingTypes());
+		request.setAttribute("model", building);
 		RequestDispatcher rd = request.getRequestDispatcher(url);
 		rd.forward(request, response);
 	}

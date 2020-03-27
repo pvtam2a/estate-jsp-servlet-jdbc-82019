@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="/common/tagLib.jsp" %>
+<c:url var="buildingAPI" value="/api-building" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,29 +34,31 @@
 								<label class="col-sm-2 control-label no-padding-right" for="name"> Tên tòa nhà </label>
 
 								<div class="col-sm-10">
-									<input type="text" id="name" name="name" placeholder="name" class="form-control" />
+									<input type="text" id="name" name="name" placeholder="name" class="form-control" value="${model.name }" />
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label no-padding-right" for="numberofbasement"> Số tầng hầm </label>
 
 								<div class="col-sm-10">
-									<input type="number" id="numberOfBasement" name="numberOfBasement" placeholder="numberofbasement" class="form-control" />
+									<input type="number" id="numberOfBasement" name="numberOfBasement" placeholder="numberofbasement" class="form-control" value="${model.numberOfBasement }"/>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label no-padding-right" for="rentArea"> Diện tích thuê</label>
 
 								<div class="col-sm-10">
-									<input type="text" id="rentArea" name="rentArea" placeholder="rentArea" class="form-control" />
+									<input type="text" id="rentArea" name="rentArea" placeholder="rentArea" class="form-control" value="${model.rentArea }"/>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label no-padding-right"> Loại tòa nhà </label>
 								<div class="col-sm-10 border">
-									<label class="checkbox-inline"><input type="checkbox" value="TANG_TRET" id="buildingTypes" name="buildingTypes">Tầng trệt</label>
-									<label class="checkbox-inline"><input type="checkbox" value="NGUYEN_CAN" id="buildingTypes" name="buildingTypes">Nguyên căn</label>
-									<label class="checkbox-inline"><input type="checkbox" value="NOI_THAT" id="buildingTypes" name="buildingTypes">Nội thất</label>
+									<c:forEach var="item" items="${buildingTypes }">
+										<label class="checkbox-inline"><input type="checkbox" value="${item.key }" 
+											id="buildingTypes" name="buildingTypes" ${fn:contains(fn:join(model.buildingTypes, ','), item.key) ? 'checked' : '' }>${item.value }										
+										</label>
+									</c:forEach>	
 								</div>									
 							</div>
 							<div class="form-group">

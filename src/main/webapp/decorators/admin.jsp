@@ -17,6 +17,7 @@
 
 	<!-- ace settings handler --> 
 	<script src="<c:url value='/template/admin/assets/js/ace-extra.min.js' />"></script>
+	
 </head>
 <body class="no-skin">
 	<!-- Header -->
@@ -42,6 +43,8 @@
 		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
 			<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
 		</a>
+		<!-- Modal -->
+		<div id="messageModal" class="modal fade" role="dialog"></div>
 	</div>
 	<script src="<c:url value='/template/admin/assets/js/jquery.2.1.1.min.js' />"></script>
 	<script src="<c:url value='/template/admin/assets/js/ace-extra.min.js' />"></script>
@@ -56,6 +59,7 @@
 	<script src="<c:url value='/template/admin/assets/js/ace-elements.min.js' />"></script>
 	<script src="<c:url value='/template/admin/assets/js/ace.min.js' />"></script>
 	
+	<script src="<c:url value='/template/admin/js/common.js' />"></script>
 	<script src="<c:url value='/template/admin/js/building-list.js' />"></script>
 	<script src="<c:url value='/template/admin/js/building-edit.js' />"></script>
 </body>

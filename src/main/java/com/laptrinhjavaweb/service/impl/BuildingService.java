@@ -1,6 +1,7 @@
 package com.laptrinhjavaweb.service.impl;
 
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ import com.laptrinhjavaweb.builder.BuildingSearchBuilder;
 import com.laptrinhjavaweb.converter.BuildingConverter;
 import com.laptrinhjavaweb.dto.BuildingDTO;
 import com.laptrinhjavaweb.entity.BuildingEntity;
+import com.laptrinhjavaweb.enums.BuildingTypesEnum;
+import com.laptrinhjavaweb.enums.DistrictsEnum;
 import com.laptrinhjavaweb.paging.Pageable;
 import com.laptrinhjavaweb.repository.IBuildingRepository;
 import com.laptrinhjavaweb.repository.impl.BuildingRepository;
@@ -31,6 +34,7 @@ public class BuildingService implements IBuildingService{
 	}
 	@Override
 	public List<BuildingDTO> findAll(BuildingSearchBuilder fieldSearch, Pageable pageable) {
+		
 		Map<String, Object> properties = convertToMapProperties(fieldSearch);
 		
 		
@@ -68,7 +72,7 @@ public class BuildingService implements IBuildingService{
 		return properties;
 	}
 	@Override
-	public BuildingDTO save(BuildingDTO buildingDTO) {
+	public BuildingDTO save(BuildingDTO buildingDTO) throws Exception {
 		BuildingEntity buildingEntity = buildingConverter.convertToEntity(buildingDTO);
 		buildingEntity.setCreatedDate(new Date());
 		buildingEntity.setCreatedBy("system");
@@ -80,7 +84,7 @@ public class BuildingService implements IBuildingService{
 		return buildingConverter.convertToDTO(buildingRepository.findById(id));
 	}
 	@Override
-	public BuildingDTO update(BuildingDTO buildingDTO) {
+	public BuildingDTO update(BuildingDTO buildingDTO) throws Exception {
 		BuildingEntity buildingEntity = buildingConverter.convertToEntity(buildingDTO);
 		buildingEntity.setModifiedDate(new Date());
 		buildingEntity.setModifiedBy("pvtam");
@@ -90,9 +94,25 @@ public class BuildingService implements IBuildingService{
 		return buildingConverter.convertToDTO(buildingRepository.findById(id));
 	}
 	@Override
-	public void delete(Long[] ids) {
+	public void delete(Long[] ids) throws SQLException {
 		for (Long id : ids) {
 			buildingRepository.delete(id);
 		}		
-	}	
+	}
+	@Override
+	public Map<String, String> getDistricts() {
+		Map<String, String> districts = new HashMap<>();
+		for (DistrictsEnum item : DistrictsEnum.values()) {
+			districts.put(item.name(), item.getDistrictValue());
+		}	
+		return districts;
+	}
+	@Override
+	public Map<String, String> getBuildingTypes() {
+		Map<String, String> buildingTypes = new HashMap<>();
+		for (BuildingTypesEnum item : BuildingTypesEnum.values()) {
+			buildingTypes.put(item.name(), item.getBuildingTypeValue());
+		}	
+		return buildingTypes;
+	}
 }

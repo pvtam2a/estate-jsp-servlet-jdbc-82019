@@ -187,7 +187,40 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 			}
 		}
 	}
-
+	@Override
+	public List<T> findAll(String sqlSearch) {		
+		//SQL
+		StringBuilder sql = new StringBuilder(sqlSearch);		
+		ResultSetMapper<T> resultSetMapper = new ResultSetMapper<>();
+		List<T> results = new ArrayList<>();
+		Connection connection = null;
+		// PreparedStatement statement = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = EntityManagerFactory.getConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql.toString());
+			results = resultSetMapper.mapRow(resultSet, this.zClass);
+			return results;
+		} catch (SQLException e) {
+			return new ArrayList<>();
+		} finally {
+			try {
+				if (connection != null) {
+					connection.close();
+				}
+				if (statement != null) {
+					statement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e) {
+				return new ArrayList<>();
+			}
+		}
+	}
 	@Override
 	public T findById(Long id) {
 		String tableName = "";
@@ -230,7 +263,7 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 	}
 
 	@Override
-	public Long insert(Object object) {		
+	public Long insert(Object object) throws Exception {		
 		String sql = createSqlInsert();		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -275,6 +308,7 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 					e1.printStackTrace();
 				}
 			}
+			throw e;
 		} finally {
 			try {
 				if (connection != null) {
@@ -290,7 +324,6 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 				e2.printStackTrace();
 			}
 		}
-		return null;
 	}
 
 	private String createSqlInsert() {
@@ -332,7 +365,7 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 	}
 
 	@Override
-	public void update(Object object) {
+	public void update(Object object) throws Exception {
 		String sql = createSqlUpdate();		
 		Connection connection = null;
 		PreparedStatement statement = null;	
@@ -384,6 +417,7 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 					e1.printStackTrace();
 				}
 			}
+			throw e;
 		} finally {
 			try {
 				if (connection != null) {
@@ -437,7 +471,7 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 	}
 
 	@Override
-	public void delete(Long id) {
+	public void delete(Long id) throws SQLException {
 		String tableName = "";
 		if (zClass.isAnnotationPresent(Entity.class) && zClass.isAnnotationPresent(Table.class)) {
 			Table table = zClass.getAnnotation(Table.class);
@@ -461,6 +495,7 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 					e1.printStackTrace();
 				}
 			}
+			throw e;
 		} finally {
 			try {
 				if (connection != null) {

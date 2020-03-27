@@ -5,12 +5,19 @@ import org.modelmapper.ModelMapper;
 
 import com.laptrinhjavaweb.dto.BuildingDTO;
 import com.laptrinhjavaweb.entity.BuildingEntity;
+import com.laptrinhjavaweb.enums.BuildingTypesEnum;
+import com.laptrinhjavaweb.enums.DistrictsEnum;
+import com.laptrinhjavaweb.service.IRentAreaService;
+import com.laptrinhjavaweb.service.impl.RentAreaService;
 
 public class BuildingConverter {
-
+	private IRentAreaService rentAreaService = new RentAreaService();
 	public BuildingDTO convertToDTO(BuildingEntity entity) {		
 		ModelMapper modelMapper = new ModelMapper();		
-		BuildingDTO dto = modelMapper.map(entity, BuildingDTO.class);		
+		BuildingDTO dto = modelMapper.map(entity, BuildingDTO.class);	
+		dto.setAddress(dto.getStreet() + ", " + dto.getWard() + ", " + DistrictsEnum.getValueByName(dto.getDistrict()));
+		dto.setType(BuildingTypesEnum.getBuildingTypeValue(dto.getType()));
+		dto.setRentArea(rentAreaService.getRentAreaByBuildingId(dto.getId()));
 		return dto;		
 	}
 	public BuildingEntity convertToEntity(BuildingDTO dto) {		

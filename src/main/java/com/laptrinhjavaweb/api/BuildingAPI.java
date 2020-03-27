@@ -15,7 +15,9 @@ import com.laptrinhjavaweb.dto.BuildingDTO;
 import com.laptrinhjavaweb.paging.PageRequest;
 import com.laptrinhjavaweb.paging.Pageable;
 import com.laptrinhjavaweb.service.IBuildingService;
+import com.laptrinhjavaweb.service.IRentAreaService;
 import com.laptrinhjavaweb.service.impl.BuildingService;
+import com.laptrinhjavaweb.service.impl.RentAreaService;
 import com.laptrinhjavaweb.utils.FormUtil;
 import com.laptrinhjavaweb.utils.HttpUtil;
 
@@ -24,7 +26,7 @@ public class BuildingAPI extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private IBuildingService buildingService = new BuildingService();
-
+	private IRentAreaService rentAreaService = new RentAreaService();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse
 		response) throws ServletException, IOException {
@@ -56,30 +58,43 @@ public class BuildingAPI extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
-		BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
-		// buildingDTO = buildingService.save(buildingDTO);
-		mapper.writeValue(response.getOutputStream(), buildingDTO);
+		try {	
+			request.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json");
+			BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
+			buildingDTO = buildingService.save(buildingDTO);
+			mapper.writeValue(response.getOutputStream(), buildingDTO);
+		}catch (Exception e) {
+			mapper.writeValue(response.getOutputStream(), e.getMessage());
+		}	
 	}
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
-		BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
-		buildingDTO = buildingService.update(buildingDTO);
-		mapper.writeValue(response.getOutputStream(), buildingDTO);
+		try {	
+			request.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json");
+			BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
+			buildingDTO = buildingService.update(buildingDTO);
+			mapper.writeValue(response.getOutputStream(), buildingDTO);
+		}catch (Exception e) {
+			mapper.writeValue(response.getOutputStream(), e.getMessage());
+		}		
 	}
 
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
-		BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
-		buildingService.delete(buildingDTO.getIds());
-		mapper.writeValue(response.getOutputStream(), "{}");
+		try {			
+			request.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json");
+			BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
+			rentAreaService.delete(buildingDTO.getIds());
+			buildingService.delete(buildingDTO.getIds());
+			mapper.writeValue(response.getOutputStream(), "{}");
+		}catch (Exception e) {
+			mapper.writeValue(response.getOutputStream(), e.getMessage());
+		}
 	}
 }

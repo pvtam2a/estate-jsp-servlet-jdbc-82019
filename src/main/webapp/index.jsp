@@ -1,2 +1,2 @@
 <%@include file="/common/tagLib.jsp"%>
-<c:redirect url="/admin-building?action=LIST"/>
+<c:redirect url="/admin-home"/>
