@@ -18,7 +18,7 @@ public class RentAreaService implements IRentAreaService{
 		rentAreaRepository = new RentAreaRepository();
 	}
 	@Override
-	public void save(Long buildingId, String rentArea) throws Exception {
+	public void save(Long buildingId, String rentArea) throws Exception {		
 		if(StringUtils.isNotBlank(rentArea)) {
 			String[] arr = rentArea.split("\\,");
 			Date createdDate = new Date();
@@ -30,7 +30,24 @@ public class RentAreaService implements IRentAreaService{
 				rentAreaEntity.setCreatedDate(createdDate);
 				rentAreaRepository.insert(rentAreaEntity);
 			}
-		}			
+		}		
+	}
+	@Override
+	public void update(Long buildingId, String rentArea) throws Exception {
+		// TODO Auto-generated method stub
+		rentAreaRepository.deleteByBuildingId(buildingId);
+		if(StringUtils.isNotBlank(rentArea)) {
+			String[] arr = rentArea.split("\\,");
+			Date createdDate = new Date();
+			for (String item : arr) {
+				RentAreaEntity rentAreaEntity = new RentAreaEntity();
+				rentAreaEntity.setValue(item.trim());
+				rentAreaEntity.setBuildingId(buildingId);
+				rentAreaEntity.setCreatedBy("system");
+				rentAreaEntity.setCreatedDate(createdDate);
+				rentAreaRepository.insert(rentAreaEntity);
+			}
+		}	
 	}
 	@Override
 	public String getRentAreaByBuildingId(Long id) {
@@ -53,5 +70,5 @@ public class RentAreaService implements IRentAreaService{
 		for (Long id : ids) {
 			rentAreaRepository.deleteByBuildingId(id);
 		}		
-	}
+	}	
 }

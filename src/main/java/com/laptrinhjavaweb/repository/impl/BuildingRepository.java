@@ -120,5 +120,17 @@ public class BuildingRepository extends SimpleJpaRepository<BuildingEntity> impl
 //		}
 //		return new BuildingEntity();
 //	}
+	@Override
+	public int getTotalItem(Map<String, Object> params, BuildingSearchBuilder fieldSearch) {
+		StringBuilder sqlSearch = new StringBuilder(" SELECT count(*) from building A ");
+		if(StringUtils.isNotBlank(fieldSearch.getStaffId())){
+			sqlSearch.append(" INNER JOIN assignmentstaff assignmentstaff ON A.id = assignmentstaff.buildingid ");
+		}
+		sqlSearch.append(" WHERE 1=1 ");
+		sqlSearch = this.createSQLfindAll(sqlSearch, params);
+		String sqlSpecial = buildSqlSpecial(fieldSearch);	
+		sqlSearch.append(sqlSpecial);
+		return this.count(sqlSearch.toString());
+	}
 
 }

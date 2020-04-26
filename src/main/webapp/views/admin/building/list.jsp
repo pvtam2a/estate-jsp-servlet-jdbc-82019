@@ -163,6 +163,8 @@
 												</div>
 											</div>
 											<input type="hidden" value="LIST" name="action" />
+											<input type="hidden" id="page" value="" name="page" />
+											<input type="hidden" id="limit" value="" name="limit" />
 										</form>
 									</div>
 								</div>
@@ -235,14 +237,19 @@
 									</tr>
 								</c:forEach>								
 							</tbody>
-						</table>
+						</table>						
 					</div>
-					
-				</div><!-- /.row -->
-				
+					<div class="col-xs-12" align="center">
+						<!-- paging -->
+						<nav aria-label="Page navigation">
+					        <ul class="pagination" id="pagination"></ul>
+					    </nav>
+					</div>
+				</div><!-- /.row -->				
 			</div><!-- /.page-content -->
 		</div>
 	</div><!-- /.main-content -->
+	
 	
 	
 	<!-- Modal -->
@@ -264,18 +271,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<!-- <tr>
-						<td><input type="checkbox" value="1" id="checkbox_1"></td>
-						<td>Nguyễn Văn A</td>							
-					</tr>
-					<tr>
-						<td><input type="checkbox" value="2" id="checkbox_2" checked></td>
-						<td>Nguyễn Văn B</td>						
-					</tr>
-					<tr>
-						<td><input type="checkbox" value="3" id="checkbox_3"></td>
-						<td>Nguyễn Văn C</td>							
-					</tr> -->
+						<!-- content -->					
 					</tbody>
 			   </table>
 			   <input type="hidden" id="buildingId" name="buildingId" value="">
@@ -287,6 +283,28 @@
 		</div>
 
 	  </div>
-	</div>
+	</div>	
+	<script>
+		var totalPage = ${model.totalPage};
+		var currentPage = ${model.page};
+		var limit = ${model.limit};
+		$(function () {
+		    window.pagObj = $('#pagination').twbsPagination({
+		        totalPages: totalPage,
+		        visiblePages: 10,
+		        startPage: currentPage,
+		        onPageClick: function (event, page) {
+		        	if(currentPage != page){
+		        		console.info(page + ' (from options)');
+			            $('#page').val(page);
+			            $('#limit').val(5);
+			            $('#formSearchBuilding').submit();
+		        	}		           
+		        }
+		    }).on('page', function (event, page) {
+		        console.info(page + ' (from event listening)');
+		    });
+		});
+	</script>
 </body>
 </html>

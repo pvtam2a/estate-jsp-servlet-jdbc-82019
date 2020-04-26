@@ -15,4 +15,5 @@ public interface JpaRepository<T> {
 	void update(Object object)  throws Exception;
 	void delete(Long id)  throws SQLException;
 	List<T> findAll(String sqlSearch);
+	int count(String sql, Object...objects);
 }

@@ -75,14 +75,13 @@ public class BuildingAPI extends HttpServlet {
 		try {	
 			request.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json");
-			BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);
+			BuildingDTO buildingDTO = HttpUtil.of(request.getReader()).toModel(BuildingDTO.class);			
 			buildingDTO = buildingService.update(buildingDTO);
 			mapper.writeValue(response.getOutputStream(), buildingDTO);
 		}catch (Exception e) {
 			mapper.writeValue(response.getOutputStream(), e.getMessage());
 		}		
 	}
-
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ObjectMapper mapper = new ObjectMapper();

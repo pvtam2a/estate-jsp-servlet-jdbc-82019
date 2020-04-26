@@ -11,11 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.laptrinhjavaweb.builder.BuildingSearchBuilder;
+import com.laptrinhjavaweb.converter.BuildingConverter;
 import com.laptrinhjavaweb.dto.BuildingDTO;
 import com.laptrinhjavaweb.paging.PageRequest;
 import com.laptrinhjavaweb.paging.Pageable;
+import com.laptrinhjavaweb.repository.IBuildingRepository;
+import com.laptrinhjavaweb.repository.impl.BuildingRepository;
 import com.laptrinhjavaweb.service.IBuildingService;
+import com.laptrinhjavaweb.service.IRentAreaService;
 import com.laptrinhjavaweb.service.impl.BuildingService;
+import com.laptrinhjavaweb.service.impl.RentAreaService;
 import com.laptrinhjavaweb.utils.FormUtil;
 
 @WebServlet(urlPatterns = {"/admin-building"})
@@ -23,7 +28,17 @@ public class BuildingController extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private IBuildingService buildingService = new BuildingService();
+	private IBuildingService buildingService;
+	private IBuildingRepository buildingRepository;
+	private BuildingConverter buildingConverter;
+	private IRentAreaService rentAreaService;
+	public BuildingController() {
+		buildingService = new BuildingService();
+		buildingRepository = new BuildingRepository();
+		buildingConverter = new BuildingConverter();
+		rentAreaService = new RentAreaService();
+	}
+
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -42,22 +57,23 @@ public class BuildingController extends HttpServlet{
 					.setCostRentFrom(building.getCostRentFrom())
 					.setCostRentTo(building.getCostRentTo()) .setStaffId(building.getStaffId())
 					.build();
-
 			Pageable pageable = new PageRequest(building.getPage(), building.getLimit());
-			List<BuildingDTO> buildings = buildingService.findAll(buildingSearchBuilder, pageable);
-						
-			request.setAttribute("buildings", buildings);			
+			List<BuildingDTO> buildings = buildingService.findAll(buildingSearchBuilder, pageable);			
+			Integer totalItems = Integer.valueOf(buildingService.getTotalItem(buildingSearchBuilder));
+			if(buildings.size() == 0 && totalItems > 0) {
+				pageable.setPage(pageable.getPage() - 1);
+				buildings = buildingService.findAll(buildingSearchBuilder, pageable);
+			}
+			building.setTotalPage((int) Math.ceil((double)totalItems/(double)pageable.getLimit()));
+			building.setPage(pageable.getPage());	
+			building.setLimit(pageable.getLimit());
+			request.setAttribute("buildings", buildings);		
 			url = "/views/admin/building/list.jsp";			
 		}else if(action != null && action.equals("EDIT")) {
-			if(building.getId() != null) {
-				//findbyId
-				//cac ban tu lam anh sua
-				building = new BuildingDTO();
-				building.setName("CMC Tower");
-				String[] type = {"TANG_TRET", "NGUYEN_CAN"};
-				building.setBuildingTypes(type);
-				building.setNumberOfBasement("3");
-				building.setRentArea("100,200");
+			if(building.getId() != null) {				
+				building = buildingConverter.convertToDTO(buildingRepository.findById(building.getId()));
+				building.setBuildingTypes(building.getType().split("//,"));
+				building.setRentArea(rentAreaService.getRentAreaByBuildingId(building.getId()));
 			}
 			url = "/views/admin/building/edit.jsp";			
 		}

@@ -1,8 +1,8 @@
-function assingmentBuilding(buildingId){
-	openModelAssingmentBuilding();		
+function assingmentBuilding(buildingId){	
 	$('#buildingId').val(buildingId);
 	console.log($('#buildingId').val());	
 	showStaffAssignment();
+	openModelAssingmentBuilding();		
 }
 function openModelAssingmentBuilding() { 
 	$('#assingmentBuildingModel').modal();
@@ -11,7 +11,6 @@ $('#btnAssignBuilding').click(function (e) {
 	e.preventDefault();
 	var data = {};
 	data['buildingId'] = $('#buildingId').val();			
-	//$('#staffList').find('tbody input[type=checkbox]');
 	var staffs = $('#staffList').find('tbody input[type=checkbox]:checked').map(function () {
 		return $(this).val();
 	}).get();
@@ -60,21 +59,49 @@ function showStaffAssignment(){
 }
 $('#btnDeleteBuilding').click(function (e) { 
 	e.preventDefault();
-	if (!confirm("Bạn chắc chắn muốn xóa không?")) {
+	/*if (!confirm("Bạn chắc chắn muốn xóa không?")) {
 	    return;
 	}
 	var data = {};			
-	//$('#staffList').find('tbody input[type=checkbox]');
 	var buildingIds = $('#buildingList').find('tbody input[type=checkbox]:checked').map(function () {
 		return $(this).val();
 	}).get();
 	data['ids'] =  buildingIds;
 	if(buildingIds.length == 0){
-		//showModal("", "Chưa có tòa nhà nào được chọn.")
 		alert("Chưa có tòa nhà nào được chọn.")
 		return;
 	}
-	deleteBuilding(data);
+	deleteBuilding(data);*/
+	
+	swal({
+	  title: "Bạn chắc chắn chưa?",
+	  text: "Bạn sẽ không thể phục hồi lại dữ liệu khi đã xóa!",
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonClass: "btn-danger",
+	  confirmButtonText: "Vâng, tôi sẽ xóa!",
+	  cancelButtonText: "Không, làm ơn hủy!",
+	  closeOnConfirm: false,
+	  closeOnCancel: false
+	},
+	function(isConfirm) {
+	  if (isConfirm) {
+		  	var data = {};			
+			var buildingIds = $('#buildingList').find('tbody input[type=checkbox]:checked').map(function () {
+				return $(this).val();
+			}).get();
+			data['ids'] =  buildingIds;
+			if(buildingIds.length == 0){			
+				swal("Chưa có tòa nhà nào được chọn.", "", "warning");
+				return;
+			}
+			deleteBuilding(data);
+	    
+	  } else {
+	    swal("Cancelled", "Your imaginary file is safe :)", "error");
+	  }
+	});
+
 });
 function deleteBuilding(data){
 	$.ajax({
@@ -82,29 +109,48 @@ function deleteBuilding(data){
 		url: "http://localhost:8080/api-building",
 		data: JSON.stringify(data),				
 		dataType: "json",
-		success: function (response) {
-			console.log('success!');
-			console.log(response);	
-			alert("Xóa thành công!");
-			location.reload();
+		success: function (response) {	
+			//swal("Xóa thành công!!", "Your imaginary file has been deleted.", "success");
+			//location.reload();
+			swal({title: "Xóa thành công!", text: "Your imaginary file has been deleted.", type: "success"},
+			   function(){ 
+			       location.reload();
+			   }
+			);
 		},
-		error: function (response) {
-			console.log('failed!');
-			alert("Đã có lỗi xảy ra!" + response);
-			console.log(response);
+		error: function (response) {	
+			swal("Đã có lỗi xảy ra!", ""+response+"", "success");
 		}
 	});
 }
 $('#btnSearchBuilding').click(function (e) { 
 	e.preventDefault();
+	 $('#page').val(1);
+	 $('#limit').val(5);
 	$('#formSearchBuilding').submit();
 });
 
 function removeBuilding(buildingId){
-	if (!confirm("Bạn chắc chắn muốn xóa không?")) {
-	    return;
-	}
-	var data = {};	
-	data['ids'] =  [buildingId];
-	deleteBuilding(data);
+	swal({
+	  title: "Bạn chắc chắn chưa?",
+	  text: "Bạn sẽ không thể phục hồi lại dữ liệu khi đã xóa!",
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonClass: "btn-danger",
+	  confirmButtonText: "Vâng, tôi sẽ xóa!",
+	  cancelButtonText: "Không, làm ơn hủy!",
+	  closeOnConfirm: false,
+	  closeOnCancel: false
+	},
+	function(isConfirm) {
+	  if (isConfirm) {			  
+		  	var data = {};	
+			data['ids'] =  [buildingId];
+			deleteBuilding(data);
+	    
+	  } else {
+	    swal("Cancelled", "Your imaginary file is safe :)", "error");
+	  }
+	});	
+	
 }

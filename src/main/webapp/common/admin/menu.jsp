@@ -49,7 +49,7 @@
 			<a href="#" class="dropdown-toggle">
 				<i class="menu-icon fa fa-desktop"></i>
 				<span class="menu-text">
-					Tòa nhà
+					Menu
 				</span>
 
 				<b class="arrow fa fa-angle-down"></b>
@@ -62,7 +62,7 @@
 				<li class="">
 					<a href="<c:url value='/admin-building?action=LIST' />">
 						<i class="menu-icon fa fa-caret-right"></i>
-						DS tòa nhà
+						Quản Lý Tòa Nhà
 					</a>
 
 					<b class="arrow"></b>
@@ -71,7 +71,7 @@
 				<li class="">
 					<a href="<c:url value='/admin-building?action=EDIT' />">
 						<i class="menu-icon fa fa-caret-right"></i>
-						Sửa tòa nhà
+						Quản Lý Khánh Hàng
 					</a>
 
 					<b class="arrow"></b>

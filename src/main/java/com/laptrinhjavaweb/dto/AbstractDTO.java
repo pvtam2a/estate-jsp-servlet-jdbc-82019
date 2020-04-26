@@ -11,6 +11,9 @@ public class AbstractDTO {
 	private String modifiedBy;	
 	private Integer page;
 	private Integer limit;
+	private Integer totalPage;
+	private Long[] ids;
+	
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -52,6 +55,18 @@ public class AbstractDTO {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Integer getTotalPage() {
+		return totalPage;
+	}
+	public void setTotalPage(Integer totalPage) {
+		this.totalPage = totalPage;
+	}
+	public Long[] getIds() {
+		return ids;
+	}
+	public void setIds(Long[] ids) {
+		this.ids = ids;
 	}
 	
 	

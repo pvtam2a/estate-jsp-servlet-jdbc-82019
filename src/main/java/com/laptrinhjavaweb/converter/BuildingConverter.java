@@ -14,6 +14,11 @@ public class BuildingConverter {
 	private IRentAreaService rentAreaService = new RentAreaService();
 	public BuildingDTO convertToDTO(BuildingEntity entity) {		
 		ModelMapper modelMapper = new ModelMapper();		
+		BuildingDTO dto = modelMapper.map(entity, BuildingDTO.class);
+		return dto;		
+	}
+	public BuildingDTO convertToDTOSearch(BuildingEntity entity) {		
+		ModelMapper modelMapper = new ModelMapper();		
 		BuildingDTO dto = modelMapper.map(entity, BuildingDTO.class);	
 		dto.setAddress(dto.getStreet() + ", " + dto.getWard() + ", " + DistrictsEnum.getValueByName(dto.getDistrict()));
 		dto.setType(BuildingTypesEnum.getBuildingTypeValue(dto.getType()));

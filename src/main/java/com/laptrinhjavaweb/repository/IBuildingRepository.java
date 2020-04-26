@@ -10,5 +10,5 @@ import com.laptrinhjavaweb.paging.Pageable;
 public interface IBuildingRepository extends JpaRepository<BuildingEntity>{
 	List<BuildingEntity> findAll(Map<String, Object> params, Pageable pageable, BuildingSearchBuilder fieldSearch);
 	BuildingEntity findById(Long id);
-	//BuildingEntity save(BuildingEntity buildingEntity);
+	int getTotalItem(Map<String, Object> params, BuildingSearchBuilder fieldSearch);
 }

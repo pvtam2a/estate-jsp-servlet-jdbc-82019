@@ -15,4 +15,5 @@ public interface IBuildingService {
 	void delete(Long[] ids) throws SQLException;
 	Map<String, String> getDistricts();
 	Map<String, String> getBuildingTypes();
+	int getTotalItem(BuildingSearchBuilder fieldSearch);
 }

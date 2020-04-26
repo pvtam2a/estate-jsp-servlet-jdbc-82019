@@ -36,12 +36,10 @@ public class BuildingService implements IBuildingService{
 	public List<BuildingDTO> findAll(BuildingSearchBuilder fieldSearch, Pageable pageable) {
 		
 		Map<String, Object> properties = convertToMapProperties(fieldSearch);
-		
-		
-		
+						
 		List<BuildingEntity> buildingEntities = buildingRepository.findAll(properties, pageable, fieldSearch);
 		
-		return buildingEntities.stream().map(item -> buildingConverter.convertToDTO(item)).collect(Collectors.toList());
+		return buildingEntities.stream().map(item -> buildingConverter.convertToDTOSearch(item)).collect(Collectors.toList());
 		
 	}
 	
@@ -80,8 +78,9 @@ public class BuildingService implements IBuildingService{
 		buildingEntity.setType(buildingConverter.convertBuildingTypeToString(buildingDTO.getBuildingTypes()));
 		Long id = buildingRepository.insert(buildingEntity);
 		//save rentArea
-		rentAreaService.save(id, buildingDTO.getRentArea());
-		return buildingConverter.convertToDTO(buildingRepository.findById(id));
+		rentAreaService.save(id, buildingDTO.getRentArea());		
+		BuildingDTO dto = buildingConverter.convertToDTO(buildingRepository.findById(id));
+		return dto;
 	}
 	@Override
 	public BuildingDTO update(BuildingDTO buildingDTO) throws Exception {
@@ -90,6 +89,8 @@ public class BuildingService implements IBuildingService{
 		buildingEntity.setModifiedBy("pvtam");
 		Long id = buildingEntity.getId();
 		buildingEntity.setType(buildingConverter.convertBuildingTypeToString(buildingDTO.getBuildingTypes()));
+		
+		rentAreaService.update(id, buildingDTO.getRentArea());
 		buildingRepository.update(buildingEntity);
 		return buildingConverter.convertToDTO(buildingRepository.findById(id));
 	}
@@ -114,5 +115,18 @@ public class BuildingService implements IBuildingService{
 			buildingTypes.put(item.name(), item.getBuildingTypeValue());
 		}	
 		return buildingTypes;
+	}
+	/*
+	 * public String buildAddress(String district, String ward, String street) {
+	 * String address = ""; if(StringUtils.isNotBlank(street)) address += street;
+	 * if(StringUtils.isNotBlank(ward)) address += "," + ward; String districtVal =
+	 * DistrictsEnum.getValueByName(district);
+	 * if(StringUtils.isNotBlank(districtVal)) address += "," + districtVal; return
+	 * address; }
+	 */
+	@Override
+	public int getTotalItem(BuildingSearchBuilder fieldSearch) {
+		Map<String, Object> properties = convertToMapProperties(fieldSearch);		
+		return buildingRepository.getTotalItem(properties, fieldSearch);
 	}
 }
