@@ -19,18 +19,18 @@ $("#btnAddBuilding").click(function() {
 		url: "http://localhost:8080/api-building", 
 		data: JSON.stringify(data),				
 		dataType: "json",
-		contenType: "application/json",
+		contentType: "application/json",
 		success: function (response) {
 			//console.log('success!');
 			console.log(response);
-			alert("Thêm thành công!");
+			swal("Thêm thành công!", "", "success");
 			clearForm();
 			$('#name').focus();
 		},
 		error: function (response) {
 			//console.log('failed!');
 			console.log(response);
-			alert("Đã có lỗi xảy ra!" + response);
+			swal("Đã có lỗi xảy ra!" + response);
 		}
 	});
 	console.log('----END----');
@@ -57,15 +57,15 @@ $("#btnEditBuilding").click(function() {
 		url: "http://localhost:8080/api-building", 
 		data: JSON.stringify(data),				
 		dataType: "json",
-		contenType: "application/json",
+		contentType: "application/json",
 		success: function (response) {
 			console.log(response);
-			alert("Cập nhật thành công!");
+			swal("Cập nhật thành công!", "", "success");
 		},
 		error: function (response) {
 			//console.log('failed!');
 			console.log(response);
-			alert("Đã có lỗi xảy ra!" + response);
+			swal("Đã có lỗi xảy ra!" + response);
 		}
 	});
 	console.log('----END----');
