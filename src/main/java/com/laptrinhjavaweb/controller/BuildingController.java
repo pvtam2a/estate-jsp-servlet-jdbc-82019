@@ -59,7 +59,7 @@ public class BuildingController extends HttpServlet{
 					.build();
 			Pageable pageable = new PageRequest(building.getPage(), building.getLimit());
 			List<BuildingDTO> buildings = buildingService.findAll(buildingSearchBuilder, pageable);			
-			Integer totalItems = Integer.valueOf(buildingService.getTotalItem(buildingSearchBuilder));
+			int totalItems = buildingService.getTotalItem(buildingSearchBuilder);
 			if(buildings.size() == 0 && totalItems > 0) {
 				pageable.setPage(pageable.getPage() - 1);
 				buildings = buildingService.findAll(buildingSearchBuilder, pageable);

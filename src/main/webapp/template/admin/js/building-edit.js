@@ -57,7 +57,7 @@ $("#btnEditBuilding").click(function() {
 		url: "http://localhost:8080/api-building", 
 		data: JSON.stringify(data),				
 		dataType: "json",
-		contentType: "application/json",
+		contenType: "application/json",
 		success: function (response) {
 			console.log(response);
 			swal("Cập nhật thành công!", "", "success");

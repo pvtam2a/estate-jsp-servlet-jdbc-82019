@@ -11,7 +11,8 @@ import com.laptrinhjavaweb.service.IUserService;
 
 public class UserService implements IUserService{
 
-	private UserConverter userConverter;
+	
+	private UserConverter userConverter;	
 	private IUserRepository userRepository;
 	
 	public UserService() {
@@ -24,6 +25,10 @@ public class UserService implements IUserService{
 		userEntity.setCreatedDate(new Date());
 		userEntity.setCreatedBy("system");
 		return userConverter.convertToDTO(userRepository.save(userEntity));
+	}
+	@Override
+	public UserDTO findByUserNameAndPasswordAndStatus(String userName, String password, Integer status) {		
+		return userConverter.convertToDTO(userRepository.findByUserNameAndPasswordAndStatus(userName, password, status));
 	}
 
 }

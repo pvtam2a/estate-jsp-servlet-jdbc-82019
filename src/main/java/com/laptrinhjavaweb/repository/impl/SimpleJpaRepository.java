@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,29 +80,6 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 				return new ArrayList<>();
 			}
 		}
-	}
-
-	protected StringBuilder createSQLfindAll(StringBuilder where, Map<String, Object> params) {		
-		if (params != null && params.size() > 0) {
-			String[] keys = new String[params.size()];
-			Object[] values = new Object[params.size()];
-			int i = 0;
-			for (Map.Entry<String, Object> item : params.entrySet()) {
-				keys[i] = item.getKey();
-				values[i] = item.getValue();
-				i++;
-			}
-			for (int i1 = 0; i1 < keys.length; i1++) {
-				if (values[i1] instanceof String && StringUtils.isNotBlank(values[i1].toString())) {
-					where.append(" AND LOWER(A." + keys[i1] + ") LIKE '%" + values[i1].toString() + "%' ");
-				} else if (values[i1] instanceof Integer && (values[i1] != null)) {
-					where.append(" AND LOWER(A." + keys[i1] + ") = " + values[i1] + " ");
-				} else if (values[i1] instanceof Long && (values[i1] != null)) {
-					where.append(" AND LOWER(A." + keys[i1] + ") = " + values[i1] + " ");
-				}
-			}
-		}
-		return where;
 	}
 
 	@Override
@@ -218,6 +196,38 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 				}
 			} catch (SQLException e) {
 				return new ArrayList<>();
+			}
+		}
+	}
+	@Override
+	public List<T> query(String sql, Object... parameters) {
+		List<T> results = new ArrayList<>();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSetMapper<T> resultSetMapper = new ResultSetMapper<>();		
+		ResultSet resultSet = null;
+		try {
+			connection = EntityManagerFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			setParameter(statement, parameters);
+			resultSet = statement.executeQuery();
+			results = resultSetMapper.mapRow(resultSet, this.zClass);
+			return results;
+		} catch (SQLException e) {
+			return null;
+		} finally {
+			try {
+				if (connection != null) {
+					connection.close();
+				}
+				if (statement != null) {
+					statement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e) {
+				return null;
 			}
 		}
 	}
@@ -543,4 +553,46 @@ public class SimpleJpaRepository<T> implements JpaRepository<T> {
 			}
 		}
 	}
+	protected StringBuilder createSQLfindAll(StringBuilder where, Map<String, Object> params) {		
+		if (params != null && params.size() > 0) {
+			String[] keys = new String[params.size()];
+			Object[] values = new Object[params.size()];
+			int i = 0;
+			for (Map.Entry<String, Object> item : params.entrySet()) {
+				keys[i] = item.getKey();
+				values[i] = item.getValue();
+				i++;
+			}
+			for (int i1 = 0; i1 < keys.length; i1++) {
+				if (values[i1] instanceof String && StringUtils.isNotBlank(values[i1].toString())) {
+					where.append(" AND LOWER(A." + keys[i1] + ") LIKE '%" + values[i1].toString() + "%' ");
+				} else if (values[i1] instanceof Integer && (values[i1] != null)) {
+					where.append(" AND LOWER(A." + keys[i1] + ") = " + values[i1] + " ");
+				} else if (values[i1] instanceof Long && (values[i1] != null)) {
+					where.append(" AND LOWER(A." + keys[i1] + ") = " + values[i1] + " ");
+				}
+			}
+		}
+		return where;
+	}
+	private void setParameter(PreparedStatement statement, Object... parameters) {
+		try {
+			for (int i = 0; i < parameters.length; i++) {
+				Object parameter = parameters[i];
+				int index = i + 1;
+				if (parameter instanceof Long) {
+					statement.setLong(index, (Long) parameter);
+				} else if (parameter instanceof String) {
+					statement.setString(index, (String) parameter);
+				} else if (parameter instanceof Integer) {
+					statement.setInt(index, (Integer) parameter);
+				} else if (parameter instanceof Timestamp) {
+					statement.setTimestamp(index, (Timestamp) parameter);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

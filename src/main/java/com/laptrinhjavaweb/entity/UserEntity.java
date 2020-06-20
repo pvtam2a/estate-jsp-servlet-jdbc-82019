@@ -18,7 +18,7 @@ public class UserEntity extends BaseEntity {
 	
 	@Column(name = "status")
 	private String status;
-
+	
 	public String getUserName() {
 		return userName;
 	}

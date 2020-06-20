@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import com.laptrinhjavaweb.entity.UserEntity;
 import com.laptrinhjavaweb.repository.IUserRepository;
@@ -56,6 +57,14 @@ public class UserRepository extends SimpleJpaRepository<UserEntity> implements I
 			}
 		}
 		return new UserEntity();
+	}
+
+	@Override
+	public UserEntity findByUserNameAndPasswordAndStatus(String userName, String password, Integer status) {
+		StringBuilder sql = new StringBuilder("SELECT * FROM user");
+		sql.append(" WHERE username = ? AND password = ? AND status = ? ");
+		List<UserEntity> users = query(sql.toString(), userName, password, status);		
+		return users.isEmpty() ? null : users.get((0));
 	}
 
 
